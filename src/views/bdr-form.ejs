@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BDR Lead Qualification Form</title>
+    <link rel="icon" type="image/png" href="/public/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="w-full max-w-none mx-auto p-4 md:p-8">
+      <!-- Header -->
+      <header class="sticky top-0 bg-white shadow z-20">
+        <div
+          class="mx-auto px-4 py-2 flex flex-col md:flex-row md:justify-between md:items-center"
+        >
+          <!-- Title -->
+          <div class="text-center md:text-left mb-4 md:mb-0">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+              BDR Lead Qualification Form
+            </h1>
+            <p class="text-gray-600">
+              Complete lead assessment and qualification
+            </p>
+          </div>
+
+          <!-- Client Info (only if contact exists) -->
+          <% if (contact && contact.properties) { %>
+          <div
+            class="bg-blue-50 border border-blue-200 rounded-lg shadow p-4 w-full md:w-auto"
+          >
+            <h2
+              class="text-lg font-semibold text-blue-800 mb-2 flex items-center"
+            >
+              <svg
+                class="w-5 h-5 mr-2 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              Client Information
+            </h2>
+            <div class="space-y-1 text-gray-900">
+              <div class="flex">
+                <span class="w-24 font-medium text-gray-600">Name:</span>
+                <span
+                  ><%= contact.properties.firstname || '' %> <%=
+                  contact.properties.lastname || '' %></span
+                >
+              </div>
+              <div class="flex">
+                <span class="w-24 font-medium text-gray-600">Email:</span>
+                <span><%= contact.properties.email || '' %></span>
+              </div>
+              <div class="flex">
+                <span class="w-24 font-medium text-gray-600">Phone:</span>
+                <span><%= contact.properties.phone || '' %></span>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </header>
+      <!-- Main Form -->
+      <main class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+        <form id="bdrForm" class="space-y-8" method="POST" action="/bdr-form">
+          <!-- Basic Information Section -->
+          <div class="border-b border-gray-200 pb-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+              Basic Information
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <!-- Company Background -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Company Background <span class="text-red-500">*</span>
+                </label>
+                <textarea
+                  name="company_background"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                  placeholder="Tell us about your company..."
+                ></textarea>
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_company_background"
+                ></div>
+              </div>
+
+              <!-- Role of Contact -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Role of the Contact <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="contact_role"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Your role/title"
+                />
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_contact_role"
+                ></div>
+              </div>
+
+              <!-- How did you hear about us -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  How did you hear about Kensium?
+                  <span class="text-red-500">*</span>
+                </label>
+                <select
+                  name="hear_about_us"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select an option</option>
+                  <option value="Partner / VAR">Partner / VAR</option>
+                  <option value="Acumatica">Acumatica</option>
+                  <option value="Adobe">Adobe</option>
+                  <option value="BigCommerce">BigCommerce</option>
+                  <option value="Sage">Sage</option>
+                  <option value="Shopify">Shopify</option>
+                  <option value="Internet">Internet</option>
+                  <option value="Social">Social</option>
+                  <option value="Industry Event">Industry Event</option>
+                  <option value="Existing Relationship">
+                    Existing Relationship
+                  </option>
+                  <option value="Other">Other</option>
+                </select>
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_hear_about_us"
+                ></div>
+              </div>
+
+              <!-- Existing VAR -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Existing VAR (if working with an ERP)
+                </label>
+                <input
+                  type="text"
+                  name="existing_var"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="VAR name if applicable"
+                />
+              </div>
+
+              <!-- Interested In -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Interested in? <span class="text-red-500">*</span>
+                </label>
+                <div class="flex flex-wrap gap-4">
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="interested_in[]"
+                      value="Products"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Products</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="interested_in[]"
+                      value="Ecommerce"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Ecommerce</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="interested_in[]"
+                      value="Acumatica"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Acumatica</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="interested_in[]"
+                      value="Staffing"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Staffing</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="interested_in[]"
+                      value="Other"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Other</span>
+                  </label>
+                </div>
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_interested_in"
+                ></div>
+              </div>
+
+              <!-- Product(s) Interested In -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Product(s) interested in
+                </label>
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
+                >
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - Adobe (Magento) Connector"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - Adobe (Magento) Connector</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - BigCommerce B2B Connector"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - BigCommerce B2B Connector</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - Braintree Plugin"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - Braintree Plugin</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - Build Your Product"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - Build Your Product</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - CommercePro"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">Acumatica - CommercePro</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - India Fixed Assets"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - India Fixed Assets</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - India Localization"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - India Localization</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - Kensium Commerce Framework"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - Kensium Commerce Framework</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - KensiumPOS"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">Acumatica - KensiumPOS</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - KensiumWMS"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">Acumatica - KensiumWMS</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - PayPal Invoicing"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - PayPal Invoicing</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - PayPal Payflow Plugin"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - PayPal Payflow Plugin</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - Rithum (ChannelAdvisor) Connector"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - Rithum (ChannelAdvisor) Connector</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Acumatica - SellerCloud Connector"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >Acumatica - SellerCloud Connector</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="ERPCommerce / Boomi Connector"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm"
+                      >ERPCommerce / Boomi Connector</span
+                    >
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Sage - KensiumPOS"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">Sage - KensiumPOS</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="UnifiCX"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">UnifiCX</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="products_interested_in[]"
+                      value="Other"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">Other</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Services Interested In -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Service(s) interested in <span class="text-red-500">*</span>
+                </label>
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
+                >
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="services_interested[]"
+                      value="Branding"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Branding</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="services_interested[]"
+                      value="Connectors"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Connectors</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="services_interested[]"
+                      value="Creative Services"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Creative Services</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="services_interested[]"
+                      value="Digital Marketing"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Digital Marketing</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="services_interested[]"
+                      value="Ecommerce"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Ecommerce</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="services_interested[]"
+                      value="Other"
+                      class="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="text-sm">Other</span>
+                  </label>
+                </div>
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_services_interested"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Needs Assessment & Timeline Section -->
+          <div class="border-b border-gray-200 pb-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+              Needs Assessment & Timeline
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <!-- Current Challenges -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  What challenges are you currently facing in [relevant area]?
+                </label>
+                <textarea
+                  name="current_challenges"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                  placeholder="Describe your current challenges..."
+                ></textarea>
+              </div>
+
+              <!-- Solution Prompt -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  What prompted you to look for a solution now?
+                </label>
+                <textarea
+                  name="solution_prompt"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                  placeholder="What triggered your search for a solution?"
+                ></textarea>
+              </div>
+
+              <!-- Implementation Timeline -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  When are you looking to implement a solution?
+                  <span class="text-red-500">*</span>
+                </label>
+                <select
+                  name="implementation_timeline"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select timeline</option>
+                  <option value="Immediate">Immediate</option>
+                  <option value="30 days">30 days</option>
+                  <option value="60 days">60 days</option>
+                  <option value="90 days">90 days</option>
+                  <option value="This Year">This Year</option>
+                  <option value="Unknown">Unknown</option>
+                </select>
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_implementation_timeline"
+                ></div>
+              </div>
+
+              <!-- Urgency -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  How urgent is this need on your priority list?
+                  <span class="text-red-500">*</span>
+                </label>
+                <select
+                  name="urgency_level"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select urgency</option>
+                  <option value="Urgent">Urgent</option>
+                  <option value="High Priority">High Priority</option>
+                  <option value="Medium Priority">Medium Priority</option>
+                  <option value="Low Priority">Low Priority</option>
+                </select>
+                <div
+                  class="text-red-600 text-sm mt-1"
+                  id="error_urgency_level"
+                ></div>
+              </div>
+
+              <!-- Decision Criteria -->
+              <div class="md:col-span-2 xl:col-span-1">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  What criteria are most important to you when choosing a
+                  solution?
+                </label>
+                <textarea
+                  name="decision_criteria"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                  placeholder="List your key decision criteria..."
+                ></textarea>
+              </div>
+
+              <!-- Evaluation Process -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  What does your evaluation process look like?
+                </label>
+                <textarea
+                  name="evaluation_process"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                  placeholder="Describe your evaluation process..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decision Making & Budget Section -->
+          <div class="border-b border-gray-200 pb-8">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+              Decision Making & Budget
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <!-- Decision Makers -->
+              <div class="md:col-span-2 xl:col-span-3">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Who else is involved in the decision-making process?
+                </label>
+                <textarea
+                  name="decision_makers"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows="3"
+                  placeholder="List key stakeholders and decision makers..."
+                ></textarea>
+              </div>
+
+              <!-- Leadership Alignment -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Is the leadership and finance team aligned and ready to move
+                  forward on this initiative?
+                </label>
+                <div class="flex space-x-4 mt-2">
+                  <label class="flex items-center">
+                    <input
+                      type="radio"
+                      name="leadership_aligned"
+                      value="Yes"
+                      class="text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">Yes</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      type="radio"
+                      name="leadership_aligned"
+                      value="No"
+                      class="text-blue-600 focus:ring-blue-500"
+                    />
+                    <span class="ml-2 text-sm">No</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Budget Approval -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Is the budget for this initiative already approved?
+                </label>
+                <input
+                  type="text"
+                  name="budget_approved"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Yes/No/Partially - provide details"
+                />
+              </div>
+
+              <!-- RFP Status -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Is there an RFQ / RFP?
+                </label>
+                <select
+                  name="rfp_status"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select status</option>
+                  <option value="Formal RFP">Formal RFP</option>
+                  <option value="Generic Questionnaire">
+                    Generic Questionnaire
+                  </option>
+                  <option value="None">None</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div x-data="{ isEcommerce: '' }">
+            <div class="mb-8">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">
+                Is your business ecommerce-specific?
+                <span class="text-red-500">*</span>
+              </label>
+              <div class="flex space-x-6">
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="is_ecommerce"
+                    value="Yes"
+                    x-model="isEcommerce"
+                    class="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span class="ml-2 text-sm">Yes</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="is_ecommerce"
+                    value="No"
+                    x-model="isEcommerce"
+                    class="text-blue-600 focus:ring-blue-500"
+                  />
+                  <span class="ml-2 text-sm">No</span>
+                </label>
+              </div>
+              <div
+                class="text-red-600 text-sm mt-1"
+                id="error_is_ecommerce"
+              ></div>
+            </div>
+
+            <!-- Ecommerce Specific Section -->
+            <div x-show="isEcommerce === 'Yes'" x-transition>
+              <div class="pb-8">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+                  Ecommerce Specific
+                </h2>
+
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+                >
+                  <!-- Current Platform -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Current eCommerce Platform
+                      <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="current_platform"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select platform</option>
+                      <option value="Adobe OpenSource">Adobe OpenSource</option>
+                      <option value="Adobe Commerce">Adobe Commerce</option>
+                      <option value="BigCommerce">BigCommerce</option>
+                      <option value="Shopify">Shopify</option>
+                      <option value="WooCommerce">WooCommerce</option>
+                      <option value="Custom">Custom</option>
+                      <option value="None">None</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div
+                      class="text-red-600 text-sm mt-1"
+                      id="error_current_platform"
+                    ></div>
+                  </div>
+                  <!-- Considering Platforms -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      eCommerce Platform(s) Considering
+                      <span class="text-red-500">*</span>
+                    </label>
+                    <div
+                      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
+                    >
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="Adobe OpenSource"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">Adobe OpenSource</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="Adobe Commerce"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">Adobe Commerce</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="BigCommerce"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">BigCommerce</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="Shopify"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">Shopify</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="WooCommerce"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">WooCommerce</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="Other"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">Other</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="considering_platforms[]"
+                          value="Undecided"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">Undecided</span>
+                      </label>
+                    </div>
+                    <div
+                      class="text-red-600 text-sm mt-1"
+                      id="error_considering_platforms"
+                    ></div>
+                  </div>
+
+                  <!-- Business Type -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Business Type <span class="text-red-500">*</span>
+                    </label>
+                    <div
+                      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
+                    >
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="business_type[]"
+                          value="B2B"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">B2B</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="business_type[]"
+                          value="B2C"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">B2C</span>
+                      </label>
+                      <label class="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="business_type[]"
+                          value="Other"
+                          class="rounded text-blue-600 focus:ring-blue-500"
+                        />
+                        <span class="text-sm">Other</span>
+                      </label>
+                    </div>
+                    <div
+                      class="text-red-600 text-sm mt-1"
+                      id="error_business_type"
+                    ></div>
+                  </div>
+
+                  <!-- Annual Revenue -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Annual Online Revenue <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="annual_revenue"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select range</option>
+                      <option value="< 1M">< $1M</option>
+                      <option value="1M - 5M">$1M - $5M</option>
+                      <option value="5M - 10M">$5M - $10M</option>
+                      <option value="10M - 50M">$10M - $50M</option>
+                      <option value="50M - 100M">$50M - $100M</option>
+                      <option value="> 100M">> $100M</option>
+                      <option value="Did not Disclose">Did not Disclose</option>
+                    </select>
+                    <div
+                      class="text-red-600 text-sm mt-1"
+                      id="error_annual_revenue"
+                    ></div>
+                  </div>
+
+                  <!-- Online Revenue Percentage -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Percentage from Online Sales
+                      <span class="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="online_percentage"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select percentage</option>
+                      <option value="0-25%">0-25%</option>
+                      <option value="25-50%">25-50%</option>
+                      <option value="50-75%">50-75%</option>
+                      <option value="75-100%">75-100%</option>
+                      <option value="All offline currently">
+                        All offline currently
+                      </option>
+                      <option value="Did not Disclose">Did not Disclose</option>
+                    </select>
+                    <div
+                      class="text-red-600 text-sm mt-1"
+                      id="error_online_percentage"
+                    ></div>
+                  </div>
+
+                  <!-- KPIs -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Important KPIs for your eCommerce business
+                    </label>
+                    <textarea
+                      name="important_kpis"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="e.g., conversion rate, AOV, cart abandonment..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Performance Tracking -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      How are you currently tracking performance across your
+                      sales funnel?
+                    </label>
+                    <textarea
+                      name="performance_tracking"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe your current tracking methods..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Metric Improvement -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      If we could help you increase a metric, what would that
+                      be, and what would it mean for your business?
+                    </label>
+                    <textarea
+                      name="metric_improvement"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Which metric and business impact..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Top 3 Requirements -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      What are the top 3 things you're looking for from your
+                      eCommerce platform/tool?
+                    </label>
+                    <textarea
+                      name="top_requirements"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="List your top 3 requirements..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Tech Stack -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Current Tech Stack & Integration Requirements
+                    </label>
+                    <textarea
+                      name="tech_stack"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="List your current tools and essential integrations..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Vendor Comparison -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      How are you comparing different vendors or solutions?
+                    </label>
+                    <textarea
+                      name="vendor_comparison"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe your comparison process..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Ideal Solution -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      What would your ideal solution look like?
+                    </label>
+                    <textarea
+                      name="ideal_solution"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe your ideal solution..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Decision Process -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      What does your decision-making process look like from
+                      evaluation to purchase?
+                    </label>
+                    <textarea
+                      name="decision_process"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe your decision process..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Evaluation Team -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Who else is involved in the evaluation process?
+                    </label>
+                    <textarea
+                      name="evaluation_team"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="List evaluation team members..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Decision Timeline -->
+                  <div>
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      When are you hoping to make a final decision?
+                    </label>
+                    <textarea
+                      name="decision_timeline"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Target decision date..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Current Setup Challenge -->
+                  <div class="md:col-span-2 xl:col-span-2">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      What's the biggest challenge you're facing with your
+                      current eCommerce setup?
+                    </label>
+                    <textarea
+                      name="current_setup_challenge"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe your main challenge..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Checkout Bottlenecks -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Are there any bottlenecks in your customer journey or
+                      checkout process?
+                    </label>
+                    <textarea
+                      name="checkout_bottlenecks"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe any bottlenecks..."
+                    ></textarea>
+                  </div>
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      What happens if you don’t solve this problem in the next
+                      3–6 months?
+                    </label>
+                    <textarea
+                      name="consequence_unsolved"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Describe the impact if not solved..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Who on your team would benefit most from this solution? -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Who on your team would benefit most from this solution?
+                    </label>
+                    <textarea
+                      name="team_benefit"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="List team members or roles..."
+                    ></textarea>
+                  </div>
+
+                  <!-- Is there a department that would be particularly excited about improving their area with this project? -->
+                  <div class="md:col-span-2 xl:col-span-3">
+                    <label
+                      class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                      Is there a department that would be particularly excited
+                      about improving their area with this project?
+                    </label>
+                    <textarea
+                      name="excited_department"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      rows="3"
+                      placeholder="Which department and why?"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end mt-8">
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition duration-150"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <!-- Javascript -->
+    <script>
+      document
+        .getElementById("bdrForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const form = e.target;
+          const formData = new FormData(form);
+
+          // Collect all form values (single and multi)
+          const data = {};
+          // 1. Single-value fields
+          for (const [key, value] of formData.entries()) {
+            if (!key.endsWith("[]")) data[key] = value;
+          }
+          // 2. Multi-value (checkbox) fields
+          form.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+            if (cb.name.endsWith("[]")) {
+              const key = cb.name.slice(0, -2);
+              if (!data[key]) data[key] = [];
+              if (cb.checked) data[key].push(cb.value);
+            }
+          });
+
+          // --- VALIDATION SECTION ---
+          // Clear all error messages
+          form
+            .querySelectorAll(".text-red-600")
+            .forEach((div) => (div.textContent = ""));
+
+          let hasError = false;
+          function showInputError(field, msg) {
+            const errDiv = document.getElementById("error_" + field);
+            if (errDiv) errDiv.textContent = msg;
+            hasError = true;
+          }
+
+          // Example required validations
+          if (!data.company_background) {
+            showInputError("company_background", "This field is required.");
+          }
+          if (!data.contact_role) {
+            showInputError("contact_role", "This field is required.");
+          }
+          if (!data.hear_about_us) {
+            showInputError("hear_about_us", "This field is required.");
+          }
+          if (!data.interested_in || data.interested_in.length === 0) {
+            showInputError("interested_in", "Select at least one option.");
+          }
+          if (
+            !data.services_interested ||
+            data.services_interested.length === 0
+          ) {
+            showInputError(
+              "services_interested",
+              "Select at least one option."
+            );
+          }
+          if (!data.implementation_timeline) {
+            showInputError(
+              "implementation_timeline",
+              "This field is required."
+            );
+          }
+          if (!data.urgency_level) {
+            showInputError("urgency_level", "This field is required.");
+          }
+          if (!data.is_ecommerce) {
+            showInputError("is_ecommerce", "Please select an option.");
+          }
+          if (data.is_ecommerce === "Yes") {
+            if (!data.current_platform) {
+              showInputError("current_platform", "This field is required.");
+            }
+            if (
+              !data.considering_platforms ||
+              data.considering_platforms.length === 0
+            ) {
+              showInputError(
+                "considering_platforms",
+                "Select at least one option."
+              );
+            }
+            if (!data.business_type || data.business_type.length === 0) {
+              showInputError("business_type", "Select at least one option.");
+            }
+            if (!data.annual_revenue) {
+              showInputError("annual_revenue", "This field is required.");
+            }
+            if (!data.online_percentage) {
+              showInputError("online_percentage", "This field is required.");
+            }
+          }
+
+          if (hasError) {
+            Toastify({
+              text: "❌ Please fill all required fields.",
+              duration: 4000,
+              gravity: "top",
+              position: "right",
+              backgroundColor:
+                "linear-gradient(90deg, #ef4444 0%, #f59e42 100%)",
+              stopOnFocus: true,
+              close: true,
+              style: {
+                fontSize: "1rem",
+                fontWeight: "500",
+                borderRadius: "0.5rem",
+                boxShadow: "0 4px 24px 0 rgba(239,68,68,0.10)",
+                padding: "1.25rem 2rem",
+                color: "#fff",
+              },
+              offset: { x: 20, y: 70 },
+              icon: "❌",
+            }).showToast();
+            return;
+          }
+
+          // Prepare data for submission
+          const params = new URLSearchParams();
+          Object.entries(data).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              val.forEach((v) => params.append(key, v));
+            } else if (val != null && val !== "") {
+              params.append(key, val);
+            }
+          });
+
+          try {
+            const response = await fetch(form.action, {
+              method: "POST",
+              headers: { Accept: "application/json" },
+              body: params,
+            });
+            const result = await response.json();
+            if (!response.ok && result.errors) {
+              // Show Toastify for general error
+              Toastify({
+                text: "❌ Please fill all required fields.",
+                duration: 4000,
+                gravity: "top",
+                position: "right",
+                backgroundColor:
+                  "linear-gradient(90deg, #ef4444 0%, #f59e42 100%)",
+                stopOnFocus: true,
+                close: true,
+                style: {
+                  fontSize: "1rem",
+                  fontWeight: "500",
+                  borderRadius: "0.5rem",
+                  boxShadow: "0 4px 24px 0 rgba(239,68,68,0.10)",
+                  padding: "1.25rem 2rem",
+                  color: "#fff",
+                },
+                offset: { x: 20, y: 70 },
+                icon: "❌",
+              }).showToast();
+
+              // Show field errors
+              Object.entries(result.errors).forEach(([field, msg]) => {
+                const errDiv = document.getElementById("error_" + field);
+                if (errDiv) errDiv.textContent = msg;
+              });
+              return;
+            }
+
+            Toastify({
+              text: `✅ ${result.message || "Form submitted!"}`,
+              duration: 5000,
+              gravity: "top",
+              position: "right",
+              backgroundColor:
+                "linear-gradient(90deg, #2563eb 0%, #22d3ee 100%)",
+              stopOnFocus: true,
+              close: true,
+              style: {
+                fontSize: "1rem",
+                fontWeight: "500",
+                borderRadius: "0.5rem",
+                boxShadow: "0 4px 24px 0 rgba(34,197,94,0.10)",
+                padding: "1.25rem 2rem",
+                color: "#fff",
+              },
+              offset: { x: 20, y: 70 },
+              icon: "✅",
+            }).showToast();
+            form.reset();
+          } catch (err) {
+            Toastify({
+              text: "❌ Submission failed. Please try again.",
+              duration: 5000,
+              gravity: "top",
+              position: "right",
+              backgroundColor:
+                "linear-gradient(90deg, #ef4444 0%, #f59e42 100%)",
+              stopOnFocus: true,
+              close: true,
+              style: {
+                fontSize: "1rem",
+                fontWeight: "500",
+                borderRadius: "0.5rem",
+                boxShadow: "0 4px 24px 0 rgba(239,68,68,0.10)",
+                padding: "1.25rem 2rem",
+                color: "#fff",
+              },
+              offset: { x: 20, y: 70 },
+              icon: "❌",
+            }).showToast();
+          }
+        });
+    </script>
+  </body>
+</html>
