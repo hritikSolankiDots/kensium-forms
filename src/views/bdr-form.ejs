@@ -38,43 +38,22 @@
           </div>
 
           <!-- Client Info (only if contact exists) -->
-          <% if (contact && contact.properties) { %>
+          <% if (deal && deal.properties && contact && contact.properties) { %>
           <div
             class="bg-blue-50 border border-blue-200 rounded-lg shadow p-4 w-full md:w-auto"
           >
-            <h2
-              class="text-lg font-semibold text-blue-800 mb-2 flex items-center"
-            >
-              <svg
-                class="w-5 h-5 mr-2 text-blue-500"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              Client Information
-            </h2>
             <div class="space-y-1 text-gray-900">
-              <div class="flex">
-                <span class="w-24 font-medium text-gray-600">Name:</span>
-                <span
-                  ><%= contact.properties.firstname || '' %> <%=
-                  contact.properties.lastname || '' %></span
-                >
+              <div class="flex items-center">
+                <span class="w-24 font-medium text-gray-600">Deal Name:</span>
+                <span><%= deal.properties.dealname %></span>
               </div>
-              <div class="flex">
-                <span class="w-24 font-medium text-gray-600">Email:</span>
-                <span><%= contact.properties.email || '' %></span>
-              </div>
-              <div class="flex">
-                <span class="w-24 font-medium text-gray-600">Phone:</span>
-                <span><%= contact.properties.phone || '' %></span>
+              <div class="flex items-center">
+                <span class="w-24 font-medium text-gray-600">Contact:</span>
+                <span>
+                  <%= contact.properties.firstname %> <%=
+                  contact.properties.lastname %> &nbsp;/&nbsp; <%=
+                  contact.properties.email %>
+                </span>
               </div>
             </div>
           </div>
@@ -84,6 +63,7 @@
       <!-- Main Form -->
       <main class="bg-white rounded-lg shadow-lg p-6 md:p-8">
         <form id="bdrForm" class="space-y-8" method="POST" action="/bdr-form">
+          <input type="hidden" name="dealId" value="<%= deal.id %>" />
           <!-- Basic Information Section -->
           <div class="border-b border-gray-200 pb-8">
             <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
@@ -365,11 +345,11 @@
                     <input
                       type="checkbox"
                       name="products_interested_in[]"
-                      value="Acumatica - Rithum (ChannelAdvisor) Connector"
+                      value="Acumatica - Rithum (ChannelAdvisior) Connector"
                       class="rounded text-blue-600 focus:ring-blue-500"
                     />
                     <span class="ml-2 text-sm"
-                      >Acumatica - Rithum (ChannelAdvisor) Connector</span
+                      >Acumatica - Rithum (ChannelAdvisior) Connector</span
                     >
                   </label>
                   <label class="flex items-center">
@@ -1187,6 +1167,10 @@
         .addEventListener("submit", async function (e) {
           e.preventDefault();
           const form = e.target;
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+
           const formData = new FormData(form);
 
           // Collect all form values (single and multi)
@@ -1276,6 +1260,8 @@
           }
 
           if (hasError) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
             Toastify({
               text: "❌ Please fill all required fields.",
               duration: 4000,
@@ -1317,6 +1303,8 @@
             });
             const result = await response.json();
             if (!response.ok && result.errors) {
+              submitBtn.disabled = false;
+              submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
               // Show Toastify for general error
               Toastify({
                 text: "❌ Please fill all required fields.",
@@ -1389,6 +1377,9 @@
               offset: { x: 20, y: 70 },
               icon: "❌",
             }).showToast();
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
           }
         });
     </script>

@@ -61,6 +61,42 @@ export async function getFirstContactAssociation(dealId) {
 }
 
 /**
+ * Updates a Deal in HubSpot by ID, using your existing crmClient axios instance.
+ */
+export async function updateDealById(id, properties) {
+  // Remove any empty values—HubSpot hates empty strings on certain fields
+  const cleanProps = {};
+  Object.entries(properties).forEach(([key, val]) => {
+    if (val != null && val !== "") {
+      cleanProps[key] = val;
+    }
+  });
+
+  const payload = { properties: cleanProps };
+
+  try {
+    const response = await crmClient.patch(`/deals/${id}`, payload);
+    if (
+      response.data &&
+      (response.data.status === "error" || response.data.errors)
+    ) {
+      throw createError(400, response.data.message || "HubSpot update failed", {
+        details: response.data,
+      });
+    }
+    return response.data;
+  } catch (err) {
+    if (err.response) {
+      console.error(
+        `❌ HubSpot ${err.response.status}:`,
+        JSON.stringify(err.response.data, null, 2)
+      );
+    }
+    throw err;
+  }
+}
+
+/**
  * Encode payload into a base64 query parameter.
  */
 export const encodePortalPayload = (payload) =>
