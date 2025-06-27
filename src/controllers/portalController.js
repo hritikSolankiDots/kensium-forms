@@ -64,45 +64,64 @@ export async function bdrFormSubmit(req, res, next) {
     const errors = {};
 
     // Basic required fields
-    if (isEmpty(formData.company_background))
-      errors.company_background = "This field is required.";
-    if (isEmpty(formData.contact_role))
-      errors.contact_role = "This field is required.";
-    if (isEmpty(formData.hear_about_us))
-      errors.hear_about_us = "This field is required.";
+    if (isEmpty(formData.company_background)) {
+      errors.company_background = "Please enter your company background.";
+    }
+    if (isEmpty(formData.contact_role)) {
+      errors.contact_role = "Please specify your role.";
+    }
+    if (isEmpty(formData.hear_about_us)) {
+      errors.hear_about_us = "Let us know how you heard about us.";
+    }
 
-    // Checkbox groups: ensure always arrays
+    // Ensure arrays for multi-select fields
     const interested_in = [].concat(formData.interested_in || []);
     const services_interested = [].concat(formData.services_interested || []);
 
-    if (interested_in.length === 0)
-      errors.interested_in = "Select at least one option.";
-    if (services_interested.length === 0)
-      errors.services_interested = "Select at least one option.";
+    if (interested_in.length === 0) {
+      errors.interested_in = "Select at least one area of interest.";
+    }
+    if (services_interested.length === 0) {
+      errors.services_interested = "Select at least one service of interest.";
+    }
 
-    if (isEmpty(formData.implementation_timeline))
-      errors.implementation_timeline = "This field is required.";
-    if (isEmpty(formData.urgency_level))
-      errors.urgency_level = "This field is required.";
-    if (isEmpty(formData.is_ecommerce))
-      errors.is_ecommerce = "Please select an option.";
+    if (isEmpty(formData.implementation_timeline)) {
+      errors.implementation_timeline = "Select your implementation timeline.";
+    }
+    if (isEmpty(formData.urgency_level)) {
+      errors.urgency_level = "Select the urgency level.";
+    }
+    if (isEmpty(formData.is_ecommerce)) {
+      errors.is_ecommerce =
+        "Please select whether you're an eCommerce business.";
+    }
 
-    // Ecommerce-specific required fields
+    // eCommerce-specific fields (only if is_ecommerce is 'Yes')
     if (formData.is_ecommerce === "Yes") {
-      if (isEmpty(formData.current_platform))
-        errors.current_platform = "This field is required.";
+      if (isEmpty(formData.current_platform)) {
+        errors.current_platform = "Enter your current eCommerce platform.";
+      }
+
       const considering_platforms = [].concat(
         formData.considering_platforms || []
       );
-      if (considering_platforms.length === 0)
-        errors.considering_platforms = "Select at least one option.";
+      if (considering_platforms.length === 0) {
+        errors.considering_platforms =
+          "Select at least one platform you're considering.";
+      }
+
       const business_type = [].concat(formData.business_type || []);
-      if (business_type.length === 0)
-        errors.business_type = "Select at least one option.";
-      if (isEmpty(formData.annual_revenue))
-        errors.annual_revenue = "This field is required.";
-      if (isEmpty(formData.online_percentage))
-        errors.online_percentage = "This field is required.";
+      if (business_type.length === 0) {
+        errors.business_type = "Select your business type.";
+      }
+
+      if (isEmpty(formData.annual_revenue)) {
+        errors.annual_revenue = "Enter your annual online revenue.";
+      }
+
+      if (isEmpty(formData.online_percentage)) {
+        errors.online_percentage = "Specify online revenue percentage.";
+      }
     }
 
     if (Object.keys(errors).length > 0) {

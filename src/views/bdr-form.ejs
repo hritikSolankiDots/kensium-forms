@@ -1203,16 +1203,19 @@
 
           // Example required validations
           if (!data.company_background) {
-            showInputError("company_background", "This field is required.");
+            showInputError(
+              "company_background",
+              "Please enter your company background."
+            );
           }
           if (!data.contact_role) {
-            showInputError("contact_role", "This field is required.");
+            showInputError("contact_role", "Please specify your role.");
           }
           if (!data.hear_about_us) {
-            showInputError("hear_about_us", "This field is required.");
+            showInputError("hear_about_us", "Tell us how you heard about us.");
           }
           if (!data.interested_in || data.interested_in.length === 0) {
-            showInputError("interested_in", "Select at least one option.");
+            showInputError("interested_in", "Select at least one interest.");
           }
           if (
             !data.services_interested ||
@@ -1220,24 +1223,30 @@
           ) {
             showInputError(
               "services_interested",
-              "Select at least one option."
+              "Select at least one service."
             );
           }
           if (!data.implementation_timeline) {
             showInputError(
               "implementation_timeline",
-              "This field is required."
+              "Select your timeline for implementation."
             );
           }
           if (!data.urgency_level) {
-            showInputError("urgency_level", "This field is required.");
+            showInputError("urgency_level", "Specify the urgency level.");
           }
           if (!data.is_ecommerce) {
-            showInputError("is_ecommerce", "Please select an option.");
+            showInputError(
+              "is_ecommerce",
+              "Please select whether you're an eCommerce business."
+            );
           }
           if (data.is_ecommerce === "Yes") {
             if (!data.current_platform) {
-              showInputError("current_platform", "This field is required.");
+              showInputError(
+                "current_platform",
+                "Specify your current eCommerce platform."
+              );
             }
             if (
               !data.considering_platforms ||
@@ -1245,17 +1254,23 @@
             ) {
               showInputError(
                 "considering_platforms",
-                "Select at least one option."
+                "Select at least one platform you're considering."
               );
             }
             if (!data.business_type || data.business_type.length === 0) {
-              showInputError("business_type", "Select at least one option.");
+              showInputError("business_type", "Select your business type.");
             }
             if (!data.annual_revenue) {
-              showInputError("annual_revenue", "This field is required.");
+              showInputError(
+                "annual_revenue",
+                "Provide your annual online revenue."
+              );
             }
             if (!data.online_percentage) {
-              showInputError("online_percentage", "This field is required.");
+              showInputError(
+                "online_percentage",
+                "Provide the percentage of online revenue."
+              );
             }
           }
 
