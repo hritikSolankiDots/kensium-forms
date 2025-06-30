@@ -29,13 +29,15 @@ export async function handleWebhook(req, res, next) {
     }
 
     // Build secure portal link
-    const portalLink = buildPortalLink(contact, deal);
+    const portalLink = buildPortalLink(contact, deal, 'bdr-form');
+    const portalLink2 = buildPortalLink(contact, deal, 'sales-discovery-form');
 
     return res.status(200).json({
       data: {
         deal: { id: deal.id },
         contact: { id: contact.id, email: contact.properties?.email || null },
         portalLink,
+        portalLink2
       },
     });
   } catch (err) {

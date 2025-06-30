@@ -1,5 +1,10 @@
 import express from "express";
-import { bdrFormShow, bdrFormSubmit } from "../controllers/portalController.js";
+import {
+  bdrFormShow,
+  bdrFormSubmit,
+  salesDiscoveryFormShow,
+  salesDiscoveryFormSubmit,
+} from "../controllers/portalController.js";
 
 const router = express.Router();
 
@@ -10,4 +15,7 @@ router.get("/", (req, res) => {
 
 router.get("/bdr-form", bdrFormShow);
 router.post("/bdr-form", bdrFormSubmit);
+
+router.get("/sales-discovery-form", salesDiscoveryFormShow);
+router.post("/sales-discovery-form", salesDiscoveryFormSubmit);
 export default router;

@@ -115,12 +115,12 @@ export const decodePortalPayload = (encoded) => {
 /**
  * Build a secure portal link for document uploads with contact context.
  */
-export function buildPortalLink(contact, deal) {
+export function buildPortalLink(contact, deal, path) {
   const payload = {
     contactId: contact.id,
     email: contact.properties?.email || contact.email,
     dealId: deal?.id,
   };
   const encoded = encodePortalPayload(payload);
-  return `${PORTAL_BASE_URL}/bdr-form?data=${encodeURIComponent(encoded)}`;
+  return `${PORTAL_BASE_URL}/${path}?data=${encodeURIComponent(encoded)}`;
 }

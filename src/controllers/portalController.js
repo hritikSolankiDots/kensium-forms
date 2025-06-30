@@ -215,3 +215,198 @@ export async function bdrFormSubmit(req, res, next) {
     next(err);
   }
 }
+
+export async function salesDiscoveryFormShow(req, res, next) {
+  try {
+    const encoded = req.query.data;
+    if (!encoded) return res.status(400).send("Missing data parameter");
+
+    // Decode payload
+    const { contactId, dealId } = decodePortalPayload(encoded);
+
+    // Fetch up-to-date contact and deal properties
+    const contact = await getContactById(contactId, [
+      "firstname",
+      "lastname",
+      "email",
+      "phone",
+    ]);
+    const deal = await getDealById(dealId, ["dealname"]);
+    if (!contact || !deal) {
+      return res.status(404).send("Contact or deal not found");
+    }
+
+    res.render("sales-discovery-form", {
+      contact: { id: contact.id, properties: contact.properties },
+      deal: { id: deal.id, properties: deal.properties },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+const propertyMap = {
+  markets_regions_do_you_currently_serve_and_do_you_have_plans_to_expand_into_new_markets_region:
+    "markets_regions_do_you_currently_serve_and_do_you_have_plans_to_expand_into_new_markets_region",
+  who_are_your_top_3_competitors_how_do_you_differentiate_from_them:
+    "who_are_your_top_3_competitors_how_do_you_differentiate_from_them",
+  do_you_manufacture_products_internal_or_contract_manufacturing__or_are_you_a_reseller_distributor:
+    "do_you_manufacture_products_internal_or_contract_manufacturing__or_are_you_a_reseller_distributor",
+  what_sales_channels_do_you_operate__online__retail__marketplaces__phone_calls__etc_:
+    "what_sales_channels_do_you_operate__online__retail__marketplaces__phone_calls__etc_",
+  main_product_categories_and_how_many_categories_products_do_you_have:
+    "main_product_categories_and_how_many_categories_products_do_you_have",
+  are_you_primarily_selling_physical_products_digital_products_services_or_a_mix:
+    "are_you_primarily_selling_physical_products_digital_products_services_or_a_mix",
+  do_you_manage_multiple_brands_or_storefronts__multiple_websites:
+    "do_you_manage_multiple_brands_or_storefronts__multiple_websites",
+  who_is_the_primary_target_audience_for_your_products_or_services:
+    "who_is_the_primary_target_audience_for_your_products_or_services",
+  how_many_different_customer_groups_do_you_have__and_do_they_see_different_prices_or_products:
+    "how_many_different_customer_groups_do_you_have__and_do_they_see_different_prices_or_products",
+  what_is_your_current_technology_stack__and_what_challenges_do_you_face_with_it:
+    "what_is_your_current_technology_stack__and_what_challenges_do_you_face_with_it",
+  what_s_working_well_on_your_current_systems_processes_that_you_would_like_to_preserve:
+    "what_s_working_well_on_your_current_systems_processes_that_you_would_like_to_preserve",
+  what_are_the_languages_currencies_used_or_proposed_to_be_used:
+    "what_are_the_languages_currencies_used_or_proposed_to_be_used",
+  what_are_your_biggest_user_experience_challenges_with_your_current_website:
+    "what_are_your_biggest_user_experience_challenges_with_your_current_website",
+  what_feedback_have_you_received_from_customers_about_your_current_website:
+    "what_feedback_have_you_received_from_customers_about_your_current_website",
+  are_you_planning_a_rebrand_or_visual_refresh_as_part_of_this_project:
+    "are_you_planning_a_rebrand_or_visual_refresh_as_part_of_this_project",
+  are_there_any_unique_things_about_how_your_business_works_or_how_you_sell:
+    "are_there_any_unique_things_about_how_your_business_works_or_how_you_sell",
+  how_many_sales_orders_does_your_organization_generate_monthly:
+    "how_many_sales_orders_does_your_organization_generate_monthly",
+  what_is_your_current_conversion_rate_and_average_order_value:
+    "what_is_your_current_conversion_rate_and_average_order_value",
+  do_your_sales_fluctuate_seasonally: "do_your_sales_fluctuate_seasonally",
+  do_you_have_any_specific_website_speed_and_performance_expectations:
+    "do_you_have_any_specific_website_speed_and_performance_expectations",
+  what_s_your_current_marketing_strategy__and_how_do_you_acquire_customers:
+    "what_s_your_current_marketing_strategy__and_how_do_you_acquire_customers",
+  what_s_your_biggest_challenge_with_online_customer_acquisition_and_retention:
+    "what_s_your_biggest_challenge_with_online_customer_acquisition_and_retention",
+  what_digital_marketing_channels_are_you_currently_using_to_drive_traffic:
+    "what_digital_marketing_channels_are_you_currently_using_to_drive_traffic",
+  which_platforms_or_campaigns_have_been_most_effective:
+    "which_platforms_or_campaigns_have_been_most_effective",
+  how_do_you_currently_track_and_measure_your_website_and_marketing_performance:
+    "how_do_you_currently_track_and_measure_your_website_and_marketing_performance",
+  what_tools_are_currently_in_your_marketing_tech_stack_crm_email_platform_cms_analytics_etc:
+    "what_tools_are_currently_in_your_marketing_tech_stack_crm_email_platform_cms_analytics_etc",
+  what_are_your_top_marketing_priorities_this_quarter_or_year:
+    "what_are_your_top_marketing_priorities_this_quarter_or_year",
+  which_kpis_matter_most_to_you_right_now:
+    "which_kpis_matter_most_to_you_right_now",
+  are_you_on_track_to_meet_those_kpis_if_not_what_s_getting_in_the_way:
+    "are_you_on_track_to_meet_those_kpis_if_not_what_s_getting_in_the_way",
+  do_you_have_a_defined_brand_bible_or_voice_guidelines:
+    "do_you_have_a_defined_brand_bible_or_voice_guidelines",
+  what_s_not_working_in_your_marketing_today_that_you_d_like_to_improve:
+    "what_s_not_working_in_your_marketing_today_that_you_d_like_to_improve",
+  if_you_had_a_magic_wand__what_would_your_ideal_marketing_setup_look_like_in_6_months:
+    "if_you_had_a_magic_wand__what_would_your_ideal_marketing_setup_look_like_in_6_months",
+  do_you_have_internal_resources_for_creative__ux__and_digital_marketing__or_would_you_need_support:
+    "do_you_have_internal_resources_for_creative__ux__and_digital_marketing__or_would_you_need_support",
+  what_is_your_content_creation_process_and_cadence:
+    "what_is_your_content_creation_process_and_cadence",
+  do_you_need_help_with_content_strategy__and_seo:
+    "do_you_need_help_with_content_strategy__and_seo",
+  what_systems_processes_or_tools_do_you_use_to_manage_sales_tax_and_compliance_today:
+    "what_systems_processes_or_tools_do_you_use_to_manage_sales_tax_and_compliance_today",
+  do_you_have_specific_compliance_or_regulatory_requirements_or_industry_specific_needs:
+    "do_you_have_specific_compliance_or_regulatory_requirements_or_industry_specific_needs",
+  are_there_any_accessibility_standards_your_website_must_comply_with:
+    "are_there_any_accessibility_standards_your_website_must_comply_with",
+  which_systems_absolutely_must_integrate_with_your_new_platform_versus_which_would_be_nice_to_have:
+    "which_systems_absolutely_must_integrate_with_your_new_platform_versus_which_would_be_nice_to_have",
+  what_erp_or_back_office_systems_do_you_use__and_how_well_do_they_integrate_with_your_current_platfo:
+    "what_erp_or_back_office_systems_do_you_use__and_how_well_do_they_integrate_with_your_current_platfo",
+  how_do_you_handle_data_synchronization_across_systems_today_for_inventory__orders__pricing__and_cus:
+    "how_do_you_handle_data_synchronization_across_systems_today_for_inventory__orders__pricing__and_cus",
+  what_systems_are_you_using_for_warehouse_or_supply_chain_management:
+    "what_systems_are_you_using_for_warehouse_or_supply_chain_management",
+  what_s_your_biggest_frustration_with_how_your_current_systems_work_together:
+    "what_s_your_biggest_frustration_with_how_your_current_systems_work_together",
+  how_do_you_currently_handle_inventory_and_order_fulfillment_in_house_dropship_3pl_or_a_combination:
+    "how_do_you_currently_handle_inventory_and_order_fulfillment_in_house_dropship_3pl_or_a_combination",
+  do_you_dropship_some_products_while_fulfilling_others_in_house:
+    "do_you_dropship_some_products_while_fulfilling_others_in_house",
+  how_do_you_handle_backorders_and_stockouts_currently:
+    "how_do_you_handle_backorders_and_stockouts_currently",
+  how_do_you_currently_handle_customer_service:
+    "how_do_you_currently_handle_customer_service",
+  walk_me_through_your_most_complicated_sale_from_quote_to_delivery_what_systems_touch_this_process:
+    "walk_me_through_your_most_complicated_sale_from_quote_to_delivery_what_systems_touch_this_process",
+  how_many_team_members_are_involved_in_managing_your_online_store:
+    "how_many_team_members_are_involved_in_managing_your_online_store",
+  do_you_have_internal_it_support_available__if_not__do_you_outsource_it:
+    "do_you_have_internal_it_support_available__if_not__do_you_outsource_it",
+  what_are_your_goals_for_moving_to__new_platform:
+    "what_are_your_goals_for_moving_to__new_platform",
+  how_will_you_measure_success_of_this_project:
+    "how_will_you_measure_success_of_this_project",
+  do_you_have_prior_experience_with_similar_projects:
+    "do_you_have_prior_experience_with_similar_projects",
+  do_you_have_assigned_resources_for_this_project:
+    "do_you_have_assigned_resources_for_this_project",
+  what_support_would_you_need_post_go_live__tech_support__website_maintenance__content_strategy__conv:
+    "what_support_would_you_need_post_go_live__tech_support__website_maintenance__content_strategy__conv",
+  are_there_any_non_negotiable_deadlines_we_need_to_work_around___like_seasonal_sales__contract_renew:
+    "are_there_any_non_negotiable_deadlines_we_need_to_work_around___like_seasonal_sales__contract_renew",
+  how_prepared_is_your_organization_for_change__are_there_any_internal_blockers_to_adoption:
+    "how_prepared_is_your_organization_for_change__are_there_any_internal_blockers_to_adoption",
+  are_there_any_concerns_about_training_or_onboarding_internal_users_to_the_new_system_:
+    "are_there_any_concerns_about_training_or_onboarding_internal_users_to_the_new_system_",
+  what_does_a_successful_partnership_look_like_to_you:
+    "what_does_a_successful_partnership_look_like_to_you",
+  what_s_your_budget_range_for_this_project:
+    "what_s_your_budget_range_for_this_project",
+  who_signs_the_contract_and_approves_payments:
+    "who_signs_the_contract_and_approves_payments",
+  who_will_be_the_project_manager_on_your_side:
+    "who_will_be_the_project_manager_on_your_side",
+  what_s_your_vendor_evaluation_and_selection_process:
+    "what_s_your_vendor_evaluation_and_selection_process",
+  are_you_evaluating_other_vendors_solutions:
+    "are_you_evaluating_other_vendors_solutions",
+};
+
+export async function salesDiscoveryFormSubmit(req, res, next) {
+  try {
+    const formData = req.body;
+  
+    const dealId = formData.dealId;
+    if (!dealId) {
+      return res.status(400).json({ message: "Missing dealId in form data." });
+    }
+
+    const deal = await getDealById(dealId, ["dealname"]);
+    if (!deal) {
+      return res.status(404).json({ message: "Deal not found." });
+    }
+
+    // Build properties object for HubSpot
+    const properties = {};
+    for (const [fieldKey, hsKey] of Object.entries(propertyMap)) {
+      let value = formData[fieldKey];
+      if (Array.isArray(value)) value = value.join(";");
+      properties[hsKey] = value ?? "";
+    }
+    // Update HubSpot deal
+    const updateResult = await updateDealById(dealId, properties);
+    if (!updateResult || updateResult.error) {
+      return res.status(500).json({
+        message: "Failed to update deal in HubSpot.",
+        error: updateResult?.error,
+      });
+    }
+
+    res.json({ message: "Form submitted successfully", data: formData });
+  } catch (err) {
+    next(err);
+  }
+}
