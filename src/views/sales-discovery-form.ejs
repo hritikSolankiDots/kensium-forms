@@ -13,6 +13,15 @@
 </head>
 
 <body class="bg-gray-50 min-h-screen">
+  <div id="form-loader"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex flex-col items-center justify-center space-y-4 z-50 hidden">
+    <!-- spinner -->
+    <div class="w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+    <!-- updated message -->
+    <p class="text-lg font-medium text-white">
+      Form is submitting…
+    </p>
+  </div>
   <div class="w-full max-w-none mx-auto p-4 md:p-8">
     <!-- Header -->
     <header class="sticky top-0 bg-white shadow z-20">
@@ -29,23 +38,24 @@
 
         <!-- Client Info (only if contact exists) -->
         <% if (deal && deal.properties && contact && contact.properties) { %>
-        <div class="bg-blue-50 border border-blue-200 rounded-lg shadow p-4 w-full md:w-auto">
-          <div class="space-y-1 text-gray-900">
-            <div class="flex items-center">
-              <span class="w-24 font-medium text-gray-600">Deal Name:</span>
-              <span><%= deal.properties.dealname %></span>
-            </div>
-            <div class="flex items-center">
-              <span class="w-24 font-medium text-gray-600">Contact:</span>
-              <span>
-                <%= contact.properties.firstname %> <%=
-                  contact.properties.lastname %> &nbsp;/&nbsp; <%=
-                  contact.properties.email %>
-              </span>
+          <div class="bg-blue-50 border border-blue-200 rounded-lg shadow p-4 w-full md:w-auto">
+            <div class="space-y-1 text-gray-900">
+              <div class="flex items-center">
+                <span class="w-24 font-medium text-gray-600">Deal Name:</span>
+                <span>
+                  <%= deal.properties.dealname %>
+                </span>
+              </div>
+              <div class="flex items-center">
+                <span class="w-24 font-medium text-gray-600">Contact:</span>
+                <span>
+                  <%= contact.properties.firstname %>
+                    <%= contact.properties.lastname %> &nbsp;/&nbsp; <%= contact.properties.email %>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <% } %>
+          <% } %>
       </div>
     </header>
     <!-- Main Form -->
@@ -53,142 +63,162 @@
       <!-- views/salesDiscoveryForm.ejs -->
       <form id="salesDiscoveryForm" action="/sales-discovery-form" method="POST">
         <input type="hidden" name="dealId" value="<%= deal.id %>" />
-        <% const sections = [
-     {
-      title: 'Business Profile',
-      items: [
-        { name: 'markets_regions_do_you_currently_serve_and_do_you_have_plans_to_expand_into_new_markets_region', label: 'What markets/regions do you currently serve, and do you have plans to expand into new markets/regions?' },
-        { name: 'who_are_your_top_3_competitors_how_do_you_differentiate_from_them', label: 'Who are your top 3 competitors? How do you differentiate from them?' },
-        { name: 'do_you_manufacture_products_internal_or_contract_manufacturing__or_are_you_a_reseller_distributor', label: 'Do you manufacture products (internal, or contract manufacturing) or are you a reseller/distributor?' },
-        { name: 'what_sales_channels_do_you_operate__online__retail__marketplaces__phone_calls__etc_', label: 'What sales channels do you operate? Online, Retail, Marketplaces, Phone Calls, etc.' },
-        { name: 'main_product_categories_and_how_many_categories_products_do_you_have', label: 'What are your main product categories and how many categories / products do you have?' },
-        { name: 'are_you_primarily_selling_physical_products_digital_products_services_or_a_mix', label: 'Are you primarily selling physical products, digital products, services, or a mix?' },
-        { name: 'do_you_manage_multiple_brands_or_storefronts__multiple_websites', label: 'Do you manage multiple brands or storefronts (multiple websites)?' }
-      ]
-    },
-    {
-      title: 'Customer Profile',
-      items: [
-        { name: 'who_is_the_primary_target_audience_for_your_products_or_services', label: 'Who is the primary target audience for your products or services?' },
-        { name: 'how_many_different_customer_groups_do_you_have__and_do_they_see_different_prices_or_products', label: 'How many different customer groups do you have, and do they see different prices or products?' }
-      ]
-    },
-    {
-      title: 'Website & Technology Stack',
-      items: [
-        { name: 'what_is_your_current_technology_stack__and_what_challenges_do_you_face_with_it', label: 'What is your current technology stack, and what challenges do you face with it?' },
-        { name: 'what_s_working_well_on_your_current_systems_processes_that_you_would_like_to_preserve', label: "What's working well on your current systems/processes that you would like to preserve?" },
-        { name: 'what_are_the_languages_currencies_used_or_proposed_to_be_used', label: 'What are the languages & currencies used or proposed to be used?' },
-        { name: 'what_are_your_biggest_user_experience_challenges_with_your_current_website', label: 'What are your biggest user experience challenges with your current website?' },
-        { name: 'what_feedback_have_you_received_from_customers_about_your_current_website', label: 'What feedback have you received from customers about your current website?' },
-        { name: 'are_you_planning_a_rebrand_or_visual_refresh_as_part_of_this_project', label: 'Are you planning a rebrand or visual refresh as part of this project?' },
-        { name: 'are_there_any_unique_things_about_how_your_business_works_or_how_you_sell', label: 'Are there any unique things about how your business works or how you sell?' }
-      ]
-    },
-    {
-      title: 'Sales & Performance Metrics',
-      items: [
-        { name: 'how_many_sales_orders_does_your_organization_generate_monthly', label: 'How many sales orders does your organization generate monthly?' },
-        { name: 'what_is_your_current_conversion_rate_and_average_order_value', label: 'What is your current conversion rate and average order value?' },
-        { name: 'do_your_sales_fluctuate_seasonally', label: 'Do your sales fluctuate seasonally?' },
-        { name: 'do_you_have_any_specific_website_speed_and_performance_expectations', label: 'Do you have any specific website speed and performance expectations?' }
-      ]
-    },
-    {
-      title: 'Marketing Strategy',
-      items: [
-        { name: 'what_s_your_current_marketing_strategy__and_how_do_you_acquire_customers', label: "What's your current marketing strategy, and how do you acquire customers?" },
-        { name: 'what_s_your_biggest_challenge_with_online_customer_acquisition_and_retention', label: "What's your biggest challenge with online customer acquisition and retention?" },
-        { name: 'what_digital_marketing_channels_are_you_currently_using_to_drive_traffic', label: 'What digital marketing channels are you currently using to drive traffic?' },
-        { name: 'which_platforms_or_campaigns_have_been_most_effective', label: 'Which platforms or campaigns have been most effective?' },
-        { name: 'how_do_you_currently_track_and_measure_your_website_and_marketing_performance', label: 'How do you currently track and measure your website and marketing performance?' },
-        { name: 'what_tools_are_currently_in_your_marketing_tech_stack_crm_email_platform_cms_analytics_etc', label: 'What tools are currently in your marketing tech stack (CRM, email platform, CMS, analytics, etc.)?' },
-        { name: 'what_are_your_top_marketing_priorities_this_quarter_or_year', label: 'What are your top marketing priorities this quarter or year?' },
-        { name: 'which_kpis_matter_most_to_you_right_now', label: 'Which KPIs matter most to you right now?' },
-        { name: 'are_you_on_track_to_meet_those_kpis_if_not_what_s_getting_in_the_way', label: "Are you on track to meet those KPIs? If not, what's getting in the way?" },
-        { name: 'do_you_have_a_defined_brand_bible_or_voice_guidelines', label: 'Do you have a defined brand bible or voice guidelines?' },
-        { name: 'what_s_not_working_in_your_marketing_today_that_you_d_like_to_improve', label: "What's not working in your marketing today that you'd like to improve?" },
-        { name: 'if_you_had_a_magic_wand__what_would_your_ideal_marketing_setup_look_like_in_6_months', label: 'If you had a magic wand, what would your ideal marketing setup look like in 6 months?' },
-        { name: 'do_you_have_internal_resources_for_creative__ux__and_digital_marketing__or_would_you_need_support', label: 'Do you have internal resources for creative, UX, and digital marketing, or would you need support in these areas?' },
-        { name: 'what_is_your_content_creation_process_and_cadence', label: 'What is your content creation process and cadence?' },
-        { name: 'do_you_need_help_with_content_strategy__and_seo', label: 'Do you need help with content strategy, and SEO?' }
-      ]
-    },
-    {
-      title: 'Legal & Compliance',
-      items: [
-        { name: 'what_systems_processes_or_tools_do_you_use_to_manage_sales_tax_and_compliance_today', label: 'What systems, processes or tools do you use to manage sales tax and compliance today?' },
-        { name: 'do_you_have_specific_compliance_or_regulatory_requirements_or_industry_specific_needs', label: 'Do you have specific compliance or regulatory requirements or industry-specific needs?' },
-        { name: 'are_there_any_accessibility_standards_your_website_must_comply_with', label: 'Are there any accessibility standards (e.g., WCAG) your website must comply with?' }
-      ]
-    },
-    {
-      title: 'Integrations & Systems',
-      items: [
-        { name: 'which_systems_absolutely_must_integrate_with_your_new_platform_versus_which_would_be_nice_to_have', label: 'Which systems absolutely MUST integrate with your new platform versus which would be nice to have?' },
-        { name: 'what_erp_or_back_office_systems_do_you_use__and_how_well_do_they_integrate_with_your_current_platfo', label: 'What ERP or back-office systems do you use, and how well do they integrate with your current platform?' },
-        { name: 'how_do_you_handle_data_synchronization_across_systems_today_for_inventory__orders__pricing__and_cus', label: 'How do you handle data synchronization across systems today for inventory, orders, pricing, and customers?' },
-        { name: 'what_systems_are_you_using_for_warehouse_or_supply_chain_management', label: 'What systems are you using for warehouse or supply chain management?' },
-        { name: 'what_s_your_biggest_frustration_with_how_your_current_systems_work_together', label: 'What’s your biggest frustration with how your current systems work together?' }
-      ]
-    },
-    {
-      title: 'Operations & Fulfillment',
-      items: [
-        { name: 'how_do_you_currently_handle_inventory_and_order_fulfillment_in_house_dropship_3pl_or_a_combination', label: 'How do you currently handle inventory and order fulfillment – in-house, dropship, 3PL, or a combination?' },
-        { name: 'do_you_dropship_some_products_while_fulfilling_others_in_house', label: 'Do you dropship some products while fulfilling others in-house?' },
-        { name: 'how_do_you_handle_backorders_and_stockouts_currently', label: 'How do you handle backorders and stockouts currently?' },
-        { name: 'how_do_you_currently_handle_customer_service', label: 'How do you currently handle customer service?' },
-        { name: 'walk_me_through_your_most_complicated_sale_from_quote_to_delivery_what_systems_touch_this_process', label: 'Walk me through your most complicated sale from quote to delivery – what systems touch this process?' },
-        { name: 'how_many_team_members_are_involved_in_managing_your_online_store', label: 'How many team members are involved in managing your online store?' },
-        { name: 'do_you_have_internal_it_support_available__if_not__do_you_outsource_it', label: 'Do you have internal IT support available? If not, do you outsource IT?' }
-      ]
-    },
-    {
-      title: 'Project Goals & Evaluation',
-      items: [
-        { name: 'what_are_your_goals_for_moving_to__new_platform', label: 'What are your goals for moving to [new platform]?' },
-        { name: 'how_will_you_measure_success_of_this_project', label: 'How will you measure success of this project?' },
-        { name: 'do_you_have_prior_experience_with_similar_projects', label: 'Do you have prior experience with similar projects?' },
-        { name: 'do_you_have_assigned_resources_for_this_project', label: 'Do you have assigned resources for this project?' },
-        { name: 'what_support_would_you_need_post_go_live__tech_support__website_maintenance__content_strategy__conv', label: 'What support would you need post go-live? Tech Support, Website Maintenance, Content Strategy, Conversion Rate Optimization, Marketing Services, etc.?' },
-        { name: 'are_there_any_non_negotiable_deadlines_we_need_to_work_around___like_seasonal_sales__contract_renew', label: 'Are there any non-negotiable deadlines we need to work around – like seasonal sales, contract renewals, or system deprecations?' },
-        { name: 'how_prepared_is_your_organization_for_change__are_there_any_internal_blockers_to_adoption', label: 'How prepared is your organization for change? Are there any internal blockers to adoption?' },
-        { name: 'are_there_any_concerns_about_training_or_onboarding_internal_users_to_the_new_system_', label: 'Are there any concerns about training or onboarding internal users to the new system?' },
-        { name: 'what_does_a_successful_partnership_look_like_to_you', label: 'What does a successful partnership look like to you?' }
-      ]
-    },
-    {
-      title: 'Budget & Decision-Making',
-      items: [
-        { name: 'what_s_your_budget_range_for_this_project', label: "What's your budget range for this project?" },
-        { name: 'who_signs_the_contract_and_approves_payments', label: 'Who signs the contract and approves payments?' },
-        { name: 'who_will_be_the_project_manager_on_your_side', label: 'Who will be the project manager on your side?' },
-        { name: 'what_s_your_vendor_evaluation_and_selection_process', label: "What's your vendor evaluation and selection process?" },
-        { name: 'are_you_evaluating_other_vendors_solutions', label: 'Are you evaluating other vendors/solutions?' }
-      ]
-    }
-  ]; %>
+        <% const sections=[ { title: 'Business Profile' , items: [ {
+          name: 'markets_regions_do_you_currently_serve_and_do_you_have_plans_to_expand_into_new_markets_region' ,
+          label: 'What markets/regions do you currently serve, and do you have plans to expand into new markets/regions?'
+          }, { name: 'who_are_your_top_3_competitors_how_do_you_differentiate_from_them' ,
+          label: 'Who are your top 3 competitors? How do you differentiate from them?' }, {
+          name: 'do_you_manufacture_products_internal_or_contract_manufacturing__or_are_you_a_reseller_distributor' ,
+          label: 'Do you manufacture products (internal, or contract manufacturing) or are you a reseller/distributor?'
+          }, { name: 'what_sales_channels_do_you_operate__online__retail__marketplaces__phone_calls__etc_' ,
+          label: 'What sales channels do you operate? Online, Retail, Marketplaces, Phone Calls, etc.' }, {
+          name: 'main_product_categories_and_how_many_categories_products_do_you_have' ,
+          label: 'What are your main product categories and how many categories / products do you have?' }, {
+          name: 'are_you_primarily_selling_physical_products_digital_products_services_or_a_mix' ,
+          label: 'Are you primarily selling physical products, digital products, services, or a mix?' }, {
+          name: 'do_you_manage_multiple_brands_or_storefronts__multiple_websites' ,
+          label: 'Do you manage multiple brands or storefronts (multiple websites)?' } ] }, { title: 'Customer Profile'
+          , items: [ { name: 'who_is_the_primary_target_audience_for_your_products_or_services' ,
+          label: 'Who is the primary target audience for your products or services?' }, {
+          name: 'how_many_different_customer_groups_do_you_have__and_do_they_see_different_prices_or_products' ,
+          label: 'How many different customer groups do you have, and do they see different prices or products?' } ] },
+          { title: 'Website & Technology Stack' , items: [ {
+          name: 'what_is_your_current_technology_stack__and_what_challenges_do_you_face_with_it' ,
+          label: 'What is your current technology stack, and what challenges do you face with it?' }, {
+          name: 'what_s_working_well_on_your_current_systems_processes_that_you_would_like_to_preserve' ,
+          label: "What's working well on your current systems/processes that you would like to preserve?" }, {
+          name: 'what_are_the_languages_currencies_used_or_proposed_to_be_used' ,
+          label: 'What are the languages & currencies used or proposed to be used?' }, {
+          name: 'what_are_your_biggest_user_experience_challenges_with_your_current_website' ,
+          label: 'What are your biggest user experience challenges with your current website?' }, {
+          name: 'what_feedback_have_you_received_from_customers_about_your_current_website' ,
+          label: 'What feedback have you received from customers about your current website?' }, {
+          name: 'are_you_planning_a_rebrand_or_visual_refresh_as_part_of_this_project' ,
+          label: 'Are you planning a rebrand or visual refresh as part of this project?' }, {
+          name: 'are_there_any_unique_things_about_how_your_business_works_or_how_you_sell' ,
+          label: 'Are there any unique things about how your business works or how you sell?' } ] }, {
+          title: 'Sales & Performance Metrics' , items: [ {
+          name: 'how_many_sales_orders_does_your_organization_generate_monthly' ,
+          label: 'How many sales orders does your organization generate monthly?' }, {
+          name: 'what_is_your_current_conversion_rate_and_average_order_value' ,
+          label: 'What is your current conversion rate and average order value?' }, {
+          name: 'do_your_sales_fluctuate_seasonally' , label: 'Do your sales fluctuate seasonally?' }, {
+          name: 'do_you_have_any_specific_website_speed_and_performance_expectations' ,
+          label: 'Do you have any specific website speed and performance expectations?' } ] }, {
+          title: 'Marketing Strategy' , items: [ {
+          name: 'what_s_your_current_marketing_strategy__and_how_do_you_acquire_customers' ,
+          label: "What's your current marketing strategy, and how do you acquire customers?" }, {
+          name: 'what_s_your_biggest_challenge_with_online_customer_acquisition_and_retention' ,
+          label: "What's your biggest challenge with online customer acquisition and retention?" }, {
+          name: 'what_digital_marketing_channels_are_you_currently_using_to_drive_traffic' ,
+          label: 'What digital marketing channels are you currently using to drive traffic?' }, {
+          name: 'which_platforms_or_campaigns_have_been_most_effective' ,
+          label: 'Which platforms or campaigns have been most effective?' }, {
+          name: 'how_do_you_currently_track_and_measure_your_website_and_marketing_performance' ,
+          label: 'How do you currently track and measure your website and marketing performance?' }, {
+          name: 'what_tools_are_currently_in_your_marketing_tech_stack_crm_email_platform_cms_analytics_etc' ,
+          label: 'What tools are currently in your marketing tech stack (CRM, email platform, CMS, analytics, etc.)?' },
+          { name: 'what_are_your_top_marketing_priorities_this_quarter_or_year' ,
+          label: 'What are your top marketing priorities this quarter or year?' }, {
+          name: 'which_kpis_matter_most_to_you_right_now' , label: 'Which KPIs matter most to you right now?' }, {
+          name: 'are_you_on_track_to_meet_those_kpis_if_not_what_s_getting_in_the_way' ,
+          label: "Are you on track to meet those KPIs? If not, what's getting in the way?" }, {
+          name: 'do_you_have_a_defined_brand_bible_or_voice_guidelines' ,
+          label: 'Do you have a defined brand bible or voice guidelines?' }, {
+          name: 'what_s_not_working_in_your_marketing_today_that_you_d_like_to_improve' ,
+          label: "What's not working in your marketing today that you'd like to improve?" }, {
+          name: 'if_you_had_a_magic_wand__what_would_your_ideal_marketing_setup_look_like_in_6_months' ,
+          label: 'If you had a magic wand, what would your ideal marketing setup look like in 6 months?' }, {
+          name: 'do_you_have_internal_resources_for_creative__ux__and_digital_marketing__or_would_you_need_support' ,
+          label: 'Do you have internal resources for creative, UX, and digital marketing, or would you need support in these areas?'
+          }, { name: 'what_is_your_content_creation_process_and_cadence' ,
+          label: 'What is your content creation process and cadence?' }, {
+          name: 'do_you_need_help_with_content_strategy__and_seo' ,
+          label: 'Do you need help with content strategy, and SEO?' } ] }, { title: 'Legal & Compliance' , items: [ {
+          name: 'what_systems_processes_or_tools_do_you_use_to_manage_sales_tax_and_compliance_today' ,
+          label: 'What systems, processes or tools do you use to manage sales tax and compliance today?' }, {
+          name: 'do_you_have_specific_compliance_or_regulatory_requirements_or_industry_specific_needs' ,
+          label: 'Do you have specific compliance or regulatory requirements or industry-specific needs?' }, {
+          name: 'are_there_any_accessibility_standards_your_website_must_comply_with' ,
+          label: 'Are there any accessibility standards (e.g., WCAG) your website must comply with?' } ] }, {
+          title: 'Integrations & Systems' , items: [ {
+          name: 'which_systems_absolutely_must_integrate_with_your_new_platform_versus_which_would_be_nice_to_have' ,
+          label: 'Which systems absolutely MUST integrate with your new platform versus which would be nice to have?' },
+          { name: 'what_erp_or_back_office_systems_do_you_use__and_how_well_do_they_integrate_with_your_current_platfo'
+          ,
+          label: 'What ERP or back-office systems do you use, and how well do they integrate with your current platform?'
+          }, {
+          name: 'how_do_you_handle_data_synchronization_across_systems_today_for_inventory__orders__pricing__and_cus' ,
+          label: 'How do you handle data synchronization across systems today for inventory, orders, pricing, and customers?'
+          }, { name: 'what_systems_are_you_using_for_warehouse_or_supply_chain_management' ,
+          label: 'What systems are you using for warehouse or supply chain management?' }, {
+          name: 'what_s_your_biggest_frustration_with_how_your_current_systems_work_together' ,
+          label: 'What’s your biggest frustration with how your current systems work together?' } ] }, {
+          title: 'Operations & Fulfillment' , items: [ {
+          name: 'how_do_you_currently_handle_inventory_and_order_fulfillment_in_house_dropship_3pl_or_a_combination' ,
+          label: 'How do you currently handle inventory and order fulfillment – in-house, dropship, 3PL, or a combination?'
+          }, { name: 'do_you_dropship_some_products_while_fulfilling_others_in_house' ,
+          label: 'Do you dropship some products while fulfilling others in-house?' }, {
+          name: 'how_do_you_handle_backorders_and_stockouts_currently' ,
+          label: 'How do you handle backorders and stockouts currently?' }, {
+          name: 'how_do_you_currently_handle_customer_service' , label: 'How do you currently handle customer service?'
+          }, { name: 'walk_me_through_your_most_complicated_sale_from_quote_to_delivery_what_systems_touch_this_process'
+          ,
+          label: 'Walk me through your most complicated sale from quote to delivery – what systems touch this process?'
+          }, { name: 'how_many_team_members_are_involved_in_managing_your_online_store' ,
+          label: 'How many team members are involved in managing your online store?' }, {
+          name: 'do_you_have_internal_it_support_available__if_not__do_you_outsource_it' ,
+          label: 'Do you have internal IT support available? If not, do you outsource IT?' } ] }, {
+          title: 'Project Goals & Evaluation' , items: [ { name: 'what_are_your_goals_for_moving_to__new_platform' ,
+          label: 'What are your goals for moving to [new platform]?' }, {
+          name: 'how_will_you_measure_success_of_this_project' , label: 'How will you measure success of this project?'
+          }, { name: 'do_you_have_prior_experience_with_similar_projects' ,
+          label: 'Do you have prior experience with similar projects?' }, {
+          name: 'do_you_have_assigned_resources_for_this_project' ,
+          label: 'Do you have assigned resources for this project?' }, {
+          name: 'what_support_would_you_need_post_go_live__tech_support__website_maintenance__content_strategy__conv' ,
+          label: 'What support would you need post go-live? Tech Support, Website Maintenance, Content Strategy, Conversion Rate Optimization, Marketing Services, etc.?'
+          }, {
+          name: 'are_there_any_non_negotiable_deadlines_we_need_to_work_around___like_seasonal_sales__contract_renew' ,
+          label: 'Are there any non-negotiable deadlines we need to work around – like seasonal sales, contract renewals, or system deprecations?'
+          }, { name: 'how_prepared_is_your_organization_for_change__are_there_any_internal_blockers_to_adoption' ,
+          label: 'How prepared is your organization for change? Are there any internal blockers to adoption?' }, {
+          name: 'are_there_any_concerns_about_training_or_onboarding_internal_users_to_the_new_system_' ,
+          label: 'Are there any concerns about training or onboarding internal users to the new system?' }, {
+          name: 'what_does_a_successful_partnership_look_like_to_you' ,
+          label: 'What does a successful partnership look like to you?' } ] }, { title: 'Budget & Decision-Making' ,
+          items: [ { name: 'what_s_your_budget_range_for_this_project' ,
+          label: "What's your budget range for this project?" }, { name: 'who_signs_the_contract_and_approves_payments'
+          , label: 'Who signs the contract and approves payments?' }, {
+          name: 'who_will_be_the_project_manager_on_your_side' , label: 'Who will be the project manager on your side?'
+          }, { name: 'what_s_your_vendor_evaluation_and_selection_process' ,
+          label: "What's your vendor evaluation and selection process?" }, {
+          name: 'are_you_evaluating_other_vendors_solutions' , label: 'Are you evaluating other vendors/solutions?' } ]
+          } ]; %>
 
-        <% sections.forEach(section => { %>
-        <h2 class="text-xl font-semibold mt-8 mb-4 text-gray-800"><%= section.title %></h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <% section.items.forEach(q => { %>
-          <div>
-            <label for="<%= q.name %>" class="block text-sm font-medium text-gray-700 min-h-[3.5rem]">
-              <%= q.label %>
-            </label>
-            <textarea id="<%= q.name %>" name="<%= q.name %>" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2"></textarea>
-          </div>
-          <% }); %>
-        </div>
-        <% }); %>
+          <% sections.forEach(section=> { %>
+            <h2 class="text-xl font-semibold mt-8 mb-4 text-gray-800">
+              <%= section.title %>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <% section.items.forEach(q=> { %>
+                <div>
+                  <label for="<%= q.name %>" class="block text-sm font-medium text-gray-700 min-h-[3.5rem]">
+                    <%= q.label %>
+                  </label>
+                  <textarea id="<%= q.name %>" name="<%= q.name %>" rows="4"
+                    class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2"></textarea>
+                </div>
+                <% }); %>
+            </div>
+            <% }); %>
 
-        <div class="flex justify-end mt-10">
-          <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-            Submit
-          </button>
-        </div>
+              <div class="flex justify-end mt-10">
+                <button type="submit"
+                  class="px-6 py-2 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                  Submit
+                </button>
+              </div>
       </form>
 
     </main>
@@ -200,7 +230,9 @@
       e.preventDefault();
       const form = e.target;
       const btn = form.querySelector('button[type="submit"]');
+      const loader = document.getElementById("form-loader");
       btn.disabled = true;
+      loader.classList.remove("hidden");
 
       // collect and stringify
       const payload = Object.fromEntries(new FormData(form).entries());
@@ -230,6 +262,7 @@
 
       } finally {
         btn.disabled = false;
+        loader.classList.add("hidden");
       }
     });
   </script>
