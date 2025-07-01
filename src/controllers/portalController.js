@@ -1,17 +1,16 @@
 import {
-  decodePortalPayload,
   getContactById,
   getDealById,
+  getFirstContactAssociation,
   updateDealById,
 } from "../utils/hubspot_utils.js";
 
 export async function bdrFormShow(req, res, next) {
   try {
-    const encoded = req.query.data;
-    if (!encoded) return res.status(400).send("Missing data parameter");
+    const dealId = req.query.data;
+    if (!dealId) return res.status(400).send("Missing data parameter");
 
-    // Decode payload
-    const { contactId, dealId } = decodePortalPayload(encoded);
+    const contactId = await getFirstContactAssociation(dealId);
 
     // Fetch up-to-date contact and deal properties
     const contact = await getContactById(contactId, [
@@ -218,12 +217,10 @@ export async function bdrFormSubmit(req, res, next) {
 
 export async function salesDiscoveryFormShow(req, res, next) {
   try {
-    const encoded = req.query.data;
-    if (!encoded) return res.status(400).send("Missing data parameter");
+    const dealId = req.query.data;
+    if (!dealId) return res.status(400).send("Missing data parameter");
 
-    // Decode payload
-    const { contactId, dealId } = decodePortalPayload(encoded);
-
+    const contactId = await getFirstContactAssociation(dealId);
     // Fetch up-to-date contact and deal properties
     const contact = await getContactById(contactId, [
       "firstname",
@@ -378,7 +375,7 @@ const propertyMap = {
 export async function salesDiscoveryFormSubmit(req, res, next) {
   try {
     const formData = req.body;
-  
+
     const dealId = formData.dealId;
     if (!dealId) {
       return res.status(400).json({ message: "Missing dealId in form data." });
@@ -389,13 +386,31 @@ export async function salesDiscoveryFormSubmit(req, res, next) {
       return res.status(404).json({ message: "Deal not found." });
     }
 
-    // Build properties object for HubSpot
+    // 3. Build and filter properties object for HubSpot
     const properties = {};
     for (const [fieldKey, hsKey] of Object.entries(propertyMap)) {
       let value = formData[fieldKey];
-      if (Array.isArray(value)) value = value.join(";");
-      properties[hsKey] = value ?? "";
+
+      if (Array.isArray(value)) {
+        value = value.join(";");
+      }
+
+      // Only include non-null, non-empty values
+      if (value != null && value !== "") {
+        properties[hsKey] = value;
+      }
     }
+
+    // 4. If no properties to update, return early
+    if (Object.keys(properties).length === 0) {
+      return res.status(404).json({
+        success: true,
+        message: "No form fields were filled out. No update required.",
+        data: formData,
+      });
+    }
+
+
     // Update HubSpot deal
     const updateResult = await updateDealById(dealId, properties);
     if (!updateResult || updateResult.error) {
