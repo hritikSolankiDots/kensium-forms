@@ -19,11 +19,37 @@ export async function bdrFormShow(req, res, next) {
       "email",
       "phone",
     ]);
-    const deal = await getDealById(dealId, ["dealname"]);
+    const deal = await getDealById(dealId, ["dealname", "company_background", "role_of_the_contact",
+      "how_did_you_hear_about_kensium", "existing_var__if_working_with_an_erp",
+      "what_challenges_are_you_currently_facing_in_relevant_area", "what_prompted_you_to_look_for_a_solution_now",
+      "when_are_you_looking_to_implement_a_solution", "how_urgent_is_this_need_on_your_priority_list",
+      "what_criteria_are_most_important_to_you when choosing a solution", "what_does_your_evaluation_process_look_like",
+      "who_else_is_involved_in_the_decision_making_process",
+      "is_the_leadership_and_finance_team_aligned_and_ready_to_move_forward_on_this_initiative",
+      "is_the_budget_for_this_initiative_already_approved", "is_there_an_rfq_rfp", "is_ecommerce",
+      "current_ecommerce_platform", "what_ecommerce_platform_s__are_you_considering",
+      "are_you_a_b2c_business__b2b_business__or_both", "what_is_your_annual_online_revenue",
+      "what_percentage_of_your_revenue_comes_from_online_sales", "interested_in", "product_s__interested_in",
+      "service_s__interested_in", "a_department_that_would_be_particularly_excited_about_improving_their_area_with_this_project",
+      "what_kpis_are_most_important_to_your_ecommerce_business_right_now__e_g___conversion_rate__aov__cart",
+      "how_are_you_currently_tracking_performance_across_your_sales_funnel",
+      "if_we_could_help_you_increase_a_metric__what_would_that_be__and_what_would_it_mean_for_your_busines",
+      "top_3_things_you_re_looking_for_from_your_ecommerce_platform_tool",
+      "what_is_your_current_tech_stack__are_there_any_integrations_or_technical_requirements_that_are_esse",
+      "how_are_you_comparing_different_vendors_or_solutions_",
+      "what_would_your_ideal_solution_look_like",
+      "what_does_your_decision_making_process_look_like_from_evaluation_to_purchase",
+      "who_else_is_involved_in_the_evaluation_process",
+      "when_are_you_hoping_to_make_a_final_decision",
+      "what_s_the_biggest_challenge_you_re_facing_with_your_current_ecommerce_setup",
+      "are_there_any_bottlenecks_in_your_customer_journey_or_checkout_process",
+      "what_happens_if_you_don_t_solve_this_problem_in_the_next_3_6_months",
+      "who_on_your_team_would_benefit_most_from_this_solution","what_criteria_are_most_important_to_you_when_choosing_a_solution"]);
+
     if (!contact || !deal) {
       return res.status(404).send("Contact or deal not found");
     }
-
+    console.log(deal, "deal");
     res.render("bdr-form", {
       contact: { id: contact.id, properties: contact.properties },
       deal: { id: deal.id, properties: deal.properties },
@@ -51,7 +77,6 @@ export async function bdrFormSubmit(req, res, next) {
         message: "Deal not found.",
       });
     }
-
     // Helper to check if a field is empty or missing
     const isEmpty = (val) =>
       val === undefined ||
@@ -149,9 +174,9 @@ export async function bdrFormSubmit(req, res, next) {
         "is_the_leadership_and_finance_team_aligned_and_ready_to_move_forward_on_this_initiative",
       budget_approved: "is_the_budget_for_this_initiative_already_approved",
       rfp_status: "is_there_an_rfq_rfp",
-      // is_ecommerce: "is_ecommerce",
+      is_ecommerce: "is_ecommerce",
       current_platform:
-        "what_ecommerce_platform_are_you_currently_using__if_any",
+        "current_ecommerce_platform",
       considering_platforms: "what_ecommerce_platform_s__are_you_considering",
       business_type: "are_you_a_b2c_business__b2b_business__or_both",
       annual_revenue: "what_is_your_annual_online_revenue",
@@ -191,6 +216,11 @@ export async function bdrFormSubmit(req, res, next) {
     const propertiesMap = {};
     for (const [formKey, hsName] of Object.entries(propertyMap)) {
       let val = formData[formKey];
+      if (formKey === "is_ecommerce") {
+        if (val === "Yes") val = true;
+        else if (val === "No") val = false;
+        else continue;
+      }
       if (Array.isArray(val)) val = val.join(";");
       propertiesMap[hsName] = String(val ?? "");
     }
@@ -229,6 +259,7 @@ export async function salesDiscoveryFormShow(req, res, next) {
       "phone",
     ]);
     const deal = await getDealById(dealId, ["dealname"]);
+    console.log(deal, "deal");
     if (!contact || !deal) {
       return res.status(404).send("Contact or deal not found");
     }
