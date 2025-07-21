@@ -182,13 +182,15 @@
                 <label class="flex items-center">
                   <input type="checkbox" name="products_interested_in[]" value="Acumatica - Adobe (Magento) Connector"
                     class="rounded text-blue-600 focus:ring-blue-500" <%=formData.products_interested_in &&
-                    formData.products_interested_in.includes("Acumatica - Adobe (Magento) Connector") ? "checked" : "" %> />
+                    formData.products_interested_in.includes("Acumatica - Adobe (Magento) Connector") ? "checked" : ""
+                    %> />
                   <span class="ml-2 text-sm">Acumatica - Adobe (Magento) Connector</span>
                 </label>
                 <label class="flex items-center">
                   <input type="checkbox" name="products_interested_in[]" value="Acumatica - BigCommerce B2B Connector"
                     class="rounded text-blue-600 focus:ring-blue-500" <%=formData.products_interested_in &&
-                    formData.products_interested_in.includes("Acumatica - BigCommerce B2B Connector") ? "checked" : "" %> />
+                    formData.products_interested_in.includes("Acumatica - BigCommerce B2B Connector") ? "checked" : ""
+                    %> />
                   <span class="ml-2 text-sm">Acumatica - BigCommerce B2B Connector</span>
                 </label>
                 <label class="flex items-center">
@@ -224,7 +226,8 @@
                 <label class="flex items-center">
                   <input type="checkbox" name="products_interested_in[]" value="Acumatica - Kensium Commerce Framework"
                     class="rounded text-blue-600 focus:ring-blue-500" <%=formData.products_interested_in &&
-                    formData.products_interested_in.includes("Acumatica - Kensium Commerce Framework") ? "checked" : "" %> />
+                    formData.products_interested_in.includes("Acumatica - Kensium Commerce Framework") ? "checked" : ""
+                    %> />
                   <span class="ml-2 text-sm">Acumatica - Kensium Commerce Framework</span>
                 </label>
                 <label class="flex items-center">
@@ -255,7 +258,8 @@
                   <input type="checkbox" name="products_interested_in[]"
                     value="Acumatica - Rithum (ChannelAdvisior) Connector"
                     class="rounded text-blue-600 focus:ring-blue-500" <%=formData.products_interested_in &&
-                    formData.products_interested_in.includes("Acumatica - Rithum (ChannelAdvisior) Connector") ? "checked" : "" %> />
+                    formData.products_interested_in.includes("Acumatica - Rithum (ChannelAdvisior) Connector")
+                    ? "checked" : "" %> />
                   <span class="ml-2 text-sm">Acumatica - Rithum (ChannelAdvisior) Connector</span>
                 </label>
                 <label class="flex items-center">
@@ -273,7 +277,7 @@
                 <label class="flex items-center">
                   <input type="checkbox" name="products_interested_in[]" value="Sage - KensiumPOS"
                     class="rounded text-blue-600 focus:ring-blue-500" <%=formData.products_interested_in &&
-                    formData.products_interested_in.includes("Sage - KensiumPOS") ? "checked" : "" %>  />
+                    formData.products_interested_in.includes("Sage - KensiumPOS") ? "checked" : "" %> />
                   <span class="ml-2 text-sm">Sage - KensiumPOS</span>
                 </label>
                 <label class="flex items-center">
@@ -502,8 +506,7 @@
             </div>
           </div>
         </div>
-
-        <div x-data="{ isEcommerce: '' }">
+        <div x-data="{ isEcommerce: '<%= formData.is_ecommerce || '' %>' }">
           <div class="mb-8">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
               Is your business ecommerce-specific?
@@ -512,12 +515,12 @@
             <div class="flex space-x-6">
               <label class="flex items-center">
                 <input type="radio" name="is_ecommerce" value="Yes" x-model="isEcommerce"
-                  class="text-blue-600 focus:ring-blue-500" <%=formData.is_ecommerce==='true' ? "checked" : "" %> />
+                  class="text-blue-600 focus:ring-blue-500" <%=formData.is_ecommerce==='Yes' ? "checked" : "" %> />
                 <span class="ml-2 text-sm">Yes</span>
               </label>
               <label class="flex items-center">
                 <input type="radio" name="is_ecommerce" value="No" x-model="isEcommerce"
-                  class="text-blue-600 focus:ring-blue-500" <%=formData.is_ecommerce==='false' ? "checked" : "" %> />
+                  class="text-blue-600 focus:ring-blue-500" <%=formData.is_ecommerce==='No' ? "checked" : "" %> />
                 <span class="ml-2 text-sm">No</span>
               </label>
             </div>
@@ -578,43 +581,43 @@
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="Adobe OpenSource"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("Adobe OpenSource") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("Adobe OpenSource") ? "checked" : "" %> />
                       <span class="text-sm">Adobe OpenSource</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="Adobe Commerce"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("Adobe Commerce") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("Adobe Commerce") ? "checked" : "" %> />
                       <span class="text-sm">Adobe Commerce</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="BigCommerce"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("BigCommerce") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("BigCommerce") ? "checked" : "" %> />
                       <span class="text-sm">BigCommerce</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="Shopify"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("Shopify") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("Shopify") ? "checked" : "" %> />
                       <span class="text-sm">Shopify</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="WooCommerce"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("WooCommerce") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("WooCommerce") ? "checked" : "" %> />
                       <span class="text-sm">WooCommerce</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="Other"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("Other") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("Other") ? "checked" : "" %> />
                       <span class="text-sm">Other</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="considering_platforms[]" value="Undecided"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.considering_platforms &&
-                    formData.considering_platforms.includes("Undecided") ? "checked" : "" %> />
+                        formData.considering_platforms.includes("Undecided") ? "checked" : "" %> />
                       <span class="text-sm">Undecided</span>
                     </label>
                   </div>
@@ -630,19 +633,19 @@
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="business_type[]" value="B2B"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.business_type &&
-                    formData.business_type.includes("B2B") ? "checked" : "" %> />
+                        formData.business_type.includes("B2B") ? "checked" : "" %> />
                       <span class="text-sm">B2B</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="business_type[]" value="B2C"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.business_type &&
-                    formData.business_type.includes("B2C") ? "checked" : "" %> />
+                        formData.business_type.includes("B2C") ? "checked" : "" %> />
                       <span class="text-sm">B2C</span>
                     </label>
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" name="business_type[]" value="Other"
                         class="rounded text-blue-600 focus:ring-blue-500" <%=formData.business_type &&
-                    formData.business_type.includes("Other") ? "checked" : "" %> />
+                        formData.business_type.includes("Other") ? "checked" : "" %> />
                       <span class="text-sm">Other</span>
                     </label>
                   </div>

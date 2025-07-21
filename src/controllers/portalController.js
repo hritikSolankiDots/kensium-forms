@@ -49,7 +49,7 @@ export async function bdrFormShow(req, res, next) {
     if (!contact || !deal) {
       return res.status(404).send("Contact or deal not found");
     }
-    
+
     res.render("bdr-form", {
       contact: { id: contact.id, properties: contact.properties },
       deal: { id: deal.id, properties: deal.properties },
@@ -68,7 +68,7 @@ export async function bdrFormShow(req, res, next) {
         leadership_aligned: deal.properties.is_the_leadership_and_finance_team_aligned_and_ready_to_move_forward_on_this_initiative || "",
         budget_approved: deal.properties.is_the_budget_for_this_initiative_already_approved || "",
         rfp_status: deal.properties.is_there_an_rfq_rfp || "",
-        is_ecommerce: deal.properties.is_ecommerce || "",
+        is_ecommerce: deal.properties.is_ecommerce === 'true' ? 'Yes' : 'No' || "",
         current_platform: deal.properties.current_ecommerce_platform || "",
         considering_platforms: deal.properties.what_ecommerce_platform_s__are_you_considering || "",
         business_type: deal.properties.are_you_a_b2c_business__b2b_business__or_both || "",
