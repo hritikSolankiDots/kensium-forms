@@ -45,8 +45,7 @@ export async function bdrFormShow(req, res, next) {
       "are_there_any_bottlenecks_in_your_customer_journey_or_checkout_process",
       "what_happens_if_you_don_t_solve_this_problem_in_the_next_3_6_months",
       "who_on_your_team_would_benefit_most_from_this_solution",
-      "what_criteria_are_most_important_to_you_when_choosing_a_solution",
-      "commerce_bdr", "presales", "product_sales", "commerce_sales","solutioning___sa_dev_creatives_"]);
+      "what_criteria_are_most_important_to_you_when_choosing_a_solution",]);
 
     if (!contact || !deal) {
       return res.status(404).send("Contact or deal not found");
@@ -99,11 +98,6 @@ export async function bdrFormShow(req, res, next) {
         checkout_bottlenecks: deal.properties.are_there_any_bottlenecks_in_your_customer_journey_or_checkout_process || "",
         consequence_unsolved: deal.properties.what_happens_if_you_don_t_solve_this_problem_in_the_next_3_6_months || "",
         team_benefit: deal.properties.who_on_your_team_would_benefit_most_from_this_solution || "",
-        commerce_bdr: deal.properties.commerce_bdr || "",
-        presales: deal.properties.presales || "",
-        product_sales: deal.properties.product_sales || "",
-        commerce_sales: deal.properties.commerce_sales || "",
-        solutioning___sa_dev_creatives_: deal.properties.solutioning___sa_dev_creatives_ || "",
       },
       commerce_bdrNames,
       presalesNames,
@@ -267,11 +261,6 @@ export async function bdrFormSubmit(req, res, next) {
       interested_in: "interested_in",
       products_interested_in: "product_s__interested_in",
       services_interested: "service_s__interested_in",
-      presales: "presales",
-      commerce_bdr: "commerce_bdr",
-      product_sales: "product_sales",
-      commerce_sales: "commerce_sales",
-      solutioning___sa_dev_creatives_: "solutioning___sa_dev_creatives_",
     };
 
     const propertiesMap = {};
@@ -383,16 +372,26 @@ export async function salesDiscoveryFormShow(req, res, next) {
       'who_signs_the_contract_and_approves_payments',
       'who_will_be_the_project_manager_on_your_side',
       'what_s_your_vendor_evaluation_and_selection_process',
-      'are_you_evaluating_other_vendors_solutions']);
+      'are_you_evaluating_other_vendors_solutions', "commerce_bdr", "presales", "product_sales",
+      "commerce_sales", "solutioning___sa_dev_creatives_"]);
 
     if (!contact || !deal) {
       return res.status(404).send("Contact or deal not found");
     }
 
+    const commerce_bdrNames = ["Shena L"];
+    const presalesNames = ["Asha A", "Srimanth G", "Srinivas K", "Tharanga P"];
+    const product_salesNames = ["Amit M", "Deepak N", "Shena L"];
+    const commerce_salesNames = ["Damir V", "Durga P", "Ted S", "Yasmen B"];
+
     res.render("sales-discovery-form", {
       contact: { id: contact.id, properties: contact.properties },
       deal: { id: deal.id, properties: deal.properties },
       formData: deal.properties,
+      commerce_bdrNames,
+      presalesNames,
+      product_salesNames,
+      commerce_salesNames,
     });
   } catch (err) {
     next(err);
@@ -527,6 +526,11 @@ const propertyMap = {
     "what_s_your_vendor_evaluation_and_selection_process",
   are_you_evaluating_other_vendors_solutions:
     "are_you_evaluating_other_vendors_solutions",
+  commerce_bdr: "commerce_bdr",
+  presales: "presales",
+  product_sales: "product_sales",
+  commerce_sales: "commerce_sales",
+  solutioning___sa_dev_creatives_: "solutioning___sa_dev_creatives_",
 };
 
 export async function salesDiscoveryFormSubmit(req, res, next) {
