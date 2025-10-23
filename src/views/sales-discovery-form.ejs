@@ -63,6 +63,112 @@
       <!-- views/salesDiscoveryForm.ejs -->
       <form id="salesDiscoveryForm" action="/sales-discovery-form" method="POST">
         <input type="hidden" name="dealId" value="<%= deal.id %>" />
+
+        <div>
+          <div class="pt-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Presales Person
+                </label>
+                <select name="presales"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Select Presales</option>
+                  <% presalesNames.forEach(function(name) { %>
+                    <option value="<%= name %>" <%=formData.presales===name ? "selected" : "" %> ><%= name %>
+                    </option>
+                    <% }); %>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Commerce BDR
+                </label>
+                <select name="commerce_bdr"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Select Commerce BDR</option>
+                  <% commerce_bdrNames.forEach(function(name) { %>
+                    <option value="<%= name %>" <%=formData.commerce_bdr===name ? "selected" : "" %> ><%= name %>
+                    </option>
+                    <% }); %>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Product Sales
+                </label>
+                <select name="product_sales"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Select Product Sales</option>
+                  <% product_salesNames.forEach(function(name) { %>
+                    <option value="<%= name %>" <%=formData.product_sales===name ? "selected" : "" %> ><%= name %>
+                    </option>
+                    <% }); %>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Commerce Sales
+                </label>
+                <select name="commerce_sales"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Select Commerce Sales</option>
+                  <% commerce_salesNames.forEach(function(name) { %>
+                    <option value="<%= name %>" <%=formData.commerce_sales===name ? "selected" : "" %> ><%= name %>
+                    </option>
+                    <% }); %>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Solutioning (SA/Dev/Creatives)
+                </label>
+                <input type="text" name="solutioning___sa_dev_creatives_"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter name" value="<%= formData.solutioning___sa_dev_creatives_ %>" />
+                <div class="text-red-600 text-sm mt-1" id="error_solutioning___sa_dev_creatives_"></div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Deal Source</label>
+                <select name="deal_source" id="deal_source"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="">Select Deal Source</option>
+                  <option value="Kensium Sourced" <%=formData.deal_source==="Kensium Sourced" ? "selected" : "" %>
+                    >Kensium Sourced</option>
+                  <option value="Net at Work" <%=formData.deal_source==="Net at Work" ? "selected" : "" %>>Net at Work
+                  </option>
+                  <option value="Shopify" <%=formData.deal_source==="Shopify" ? "selected" : "" %>>Shopify</option>
+                  <option value="BigCommerce" <%=formData.deal_source==="BigCommerce" ? "selected" : "" %>>BigCommerce
+                  </option>
+                  <option value="Adobe" <%=formData.deal_source==="Adobe" ? "selected" : "" %>>Adobe</option>
+                  <option value="Digiteon" <%=formData.deal_source==="Digiteon" ? "selected" : "" %>>Digiteon</option>
+                  <option value="X3 Consulting" <%=formData.deal_source==="X3 Consulting" ? "selected" : "" %>>X3
+                    Consulting</option>
+                  <option value="Commercebuild" <%=formData.deal_source==="Commercebuild" ? "selected" : "" %>
+                    >Commercebuild</option>
+                  <option value="Plante Moran" <%=formData.deal_source==="Plante Moran" ? "selected" : "" %>>Plante
+                    Moran</option>
+                  <option value="Other" <%=formData.deal_source==="Other" ? "selected" : "" %>>Other</option>
+                </select>
+                <div class="text-red-600 text-sm mt-1" id="error_deal_source"></div>
+              </div>
+
+              <!-- Other Deal Source Details (single-line) -->
+              <!-- Visible only when Deal Source === "Other" -->
+              <div id="other_deal_source_wrapper" class="<%= formData.deal_source === 'Other' ? '' : 'hidden' %>">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Specify Other Deal Source
+                </label>
+                <input type="text" name="other_deal_source_details" id="other_deal_source_details"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter other deal source" value="<%= formData.other_deal_source_details || '' %>" />
+                <div class="text-red-600 text-sm mt-1" id="error_other_deal_source_details"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <% const sections=[ { title: 'Business Profile' , items: [ {
           name: 'markets_regions_do_you_currently_serve_and_do_you_have_plans_to_expand_into_new_markets_region' ,
           label: 'What markets/regions do you currently serve, and do you have plans to expand into new markets/regions?'
@@ -215,76 +321,6 @@
                 <% }); %>
             </div>
             <% }); %>
-              <div>
-                <div class="pb-8 pt-4">
-                 
-                  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
-                        Presales Person
-                      </label>
-                      <select name="presales"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Presales</option>
-                        <% presalesNames.forEach(function(name) { %>
-                          <option value="<%= name %>" <%=formData.presales===name ? "selected" : "" %> ><%= name %>
-                          </option>
-                          <% }); %>
-                      </select>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
-                        Commerce BDR
-                      </label>
-                      <select name="commerce_bdr"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Commerce BDR</option>
-                        <% commerce_bdrNames.forEach(function(name) { %>
-                          <option value="<%= name %>" <%=formData.commerce_bdr===name ? "selected" : "" %> ><%= name %>
-                          </option>
-                          <% }); %>
-                      </select>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
-                        Product Sales
-                      </label>
-                      <select name="product_sales"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Product Sales</option>
-                        <% product_salesNames.forEach(function(name) { %>
-                          <option value="<%= name %>" <%=formData.product_sales===name ? "selected" : "" %> ><%= name %>
-                          </option>
-                          <% }); %>
-                      </select>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
-                        Commerce Sales
-                      </label>
-                      <select name="commerce_sales"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Commerce Sales</option>
-                        <% commerce_salesNames.forEach(function(name) { %>
-                          <option value="<%= name %>" <%=formData.commerce_sales===name ? "selected" : "" %> ><%= name
-                              %>
-                          </option>
-                          <% }); %>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
-                        Solutioning (SA/Dev/Creatives)
-                      </label>
-                      <input type="text" name="solutioning___sa_dev_creatives_"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter name" value="<%= formData.solutioning___sa_dev_creatives_ %>" />
-                      <div class="text-red-600 text-sm mt-1" id="error_solutioning___sa_dev_creatives_"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               <div class="flex justify-end mt-10">
                 <button type="submit"
@@ -338,6 +374,31 @@
         loader.classList.add("hidden");
       }
     });
+  </script>
+  <script>
+    (function () {
+      var dealSourceSelect = document.getElementById('deal_source');
+      var otherWrapper = document.getElementById('other_deal_source_wrapper');
+
+      function toggleOtherField() {
+        if (!dealSourceSelect) return;
+        var isOther = dealSourceSelect.value === 'Other';
+        // show/hide using Tailwind utility 'hidden'
+        if (isOther) {
+          otherWrapper.classList.remove('hidden');
+        } else {
+          otherWrapper.classList.add('hidden');
+        }
+      }
+
+      // initial toggle on page load
+      toggleOtherField();
+
+      // toggle on change
+      if (dealSourceSelect) {
+        dealSourceSelect.addEventListener('change', toggleOtherField);
+      }
+    })();
   </script>
 </body>
 

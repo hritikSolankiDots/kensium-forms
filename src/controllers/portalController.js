@@ -373,7 +373,7 @@ export async function salesDiscoveryFormShow(req, res, next) {
       'who_will_be_the_project_manager_on_your_side',
       'what_s_your_vendor_evaluation_and_selection_process',
       'are_you_evaluating_other_vendors_solutions', "commerce_bdr", "presales", "product_sales",
-      "commerce_sales", "solutioning___sa_dev_creatives_"]);
+      "commerce_sales", "solutioning___sa_dev_creatives_", "deal_source", "other_deal_source_details"]);
 
     if (!contact || !deal) {
       return res.status(404).send("Contact or deal not found");
@@ -531,6 +531,8 @@ const propertyMap = {
   product_sales: "product_sales",
   commerce_sales: "commerce_sales",
   solutioning___sa_dev_creatives_: "solutioning___sa_dev_creatives_",
+  deal_source: "deal_source",
+  other_deal_source_details: "other_deal_source_details",
 };
 
 export async function salesDiscoveryFormSubmit(req, res, next) {
